@@ -8,19 +8,19 @@ async function fetchCountries() {
 }
 
 // Display countries on the main page
-async function displayCountries() {
-    const countries = await fetchCountries();
+async function displayCountries(filteredCountries = null) {
+    const countriesToDisplay = filteredCountries || await fetchCountries();
     const countryList = document.getElementById('countryList');
     countryList.innerHTML = '';
 
-    countries.forEach(country => {
+    countriesToDisplay.forEach(country => {
         const countryDiv = document.createElement('div');
         countryDiv.classList.add('country');
         countryDiv.innerHTML = `
             <img src="${country.flag}" alt="${country.name}">
             <div class="info">
                 <h3>${country.name}</h3>
-                <p>Population: ${country.population}</p>
+                <p>Population: ${country.population.toLocaleString()}</p>
                 <p>Region: ${country.region}</p>
                 <p>Capital: ${country.capital}</p>
             </div>
@@ -31,31 +31,21 @@ async function displayCountries() {
 }
 
 // Search countries
-document.getElementById('search').addEventListener('input', (event) => {
+document.getElementById('search').addEventListener('input', async (event) => {
     const query = event.target.value.toLowerCase();
-    const countries = document.querySelectorAll('.country');
-    countries.forEach(country => {
-        const name = country.querySelector('h3').innerText.toLowerCase();
-        if (name.includes(query)) {
-            country.style.display = 'block';
-        } else {
-            country.style.display = 'none';
-        }
-    });
+    const filteredCountries = (await fetchCountries()).filter(country => 
+        country.name.toLowerCase().includes(query)
+    );
+    displayCountries(filteredCountries);
 });
 
 // Filter countries by region
-document.getElementById('regionFilter').addEventListener('change', (event) => {
+document.getElementById('regionFilter').addEventListener('change', async (event) => {
     const region = event.target.value;
-    const countries = document.querySelectorAll('.country');
-    countries.forEach(country => {
-        const countryRegion = country.querySelector('.info p:nth-child(2)').innerText.split(': ')[1];
-        if (region === '' || countryRegion === region) {
-            country.style.display = 'block';
-        } else {
-            country.style.display = 'none';
-        }
-    });
+    const filteredCountries = region ? (await fetchCountries()).filter(country => 
+        country.region === region
+    ) : await fetchCountries();
+    displayCountries(filteredCountries);
 });
 
 // Display country details
@@ -67,7 +57,7 @@ function displayCountryDetails(country) {
         <button id="backButton">Back</button>
         <img src="${country.flag}" alt="${country.name}">
         <h1>${country.name}</h1>
-        <p>Population: ${country.population}</p>
+        <p>Population: ${country.population.toLocaleString()}</p>
         <p>Region: ${country.region}</p>
         <p>Sub Region: ${country.subregion}</p>
         <p>Capital: ${country.capital}</p>
@@ -93,6 +83,11 @@ function displayCountryDetails(country) {
     countryDetails.classList.remove('hidden');
     countryList.classList.add('hidden');
 }
+
+// Dark mode toggle
+document.getElementById('darkModeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+});
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {

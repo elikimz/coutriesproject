@@ -2,14 +2,21 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #202d36;
+    color: #ffffff;
 }
 
 header {
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
-    background-color: #fff;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #2b3945;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    margin: 0;
 }
 
 .controls {
@@ -17,21 +24,37 @@ header {
     gap: 1rem;
 }
 
-main {
-    padding: 1rem;
+input, select, button {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
 }
 
-#countryList {
-    display: flex;
-    flex-wrap: wrap;
+input, select {
+    background-color: #2b3945;
+    color: #ffffff;
+}
+
+button {
+    background-color: #2b3945;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+main {
+    padding: 1rem 2rem;
+}
+
+.countries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
 }
 
 .country {
-    border: 1px solid #ddd;
+    background-color: #2b3945;
     border-radius: 5px;
     overflow: hidden;
-    width: 200px;
     cursor: pointer;
 }
 
@@ -47,12 +70,6 @@ main {
 
 #countryDetails {
     display: none;
-}
-
-#countryDetails img {
-    width: 300px;
-    height: auto;
-    object-fit: cover;
 }
 
 .hidden {
